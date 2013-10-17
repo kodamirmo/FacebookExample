@@ -28,28 +28,23 @@ public class Principal extends Activity {
 
 		Session.openActiveSession(this, true, new Session.StatusCallback() {
 
-			// callback when session changes state
 			@Override
 			public void call(Session session, SessionState state,
 					Exception exception) {
 				if (session.isOpened()) {
+					
+					Request.newMeRequest(session, new Request.GraphUserCallback() {
 
-					// make request to the /me API
-					Request.executeMeRequestAsync(session,
-							new Request.GraphUserCallback() {
-
-								// callback after Graph API response with user
-								// object
-								@Override
-								public void onCompleted(GraphUser user,
-										Response response) {
-									if (user != null) {
-										TextView welcome = (TextView) findViewById(R.id.tvHolaFacebook);
-										welcome.setText("Hello "
-												+ user.getName() + "!");
-									}
-								}
-							});
+						@Override
+						public void onCompleted(GraphUser user,
+								Response response) {
+							if (user != null) {
+								TextView welcome = (TextView) findViewById(R.id.tvHolaFacebook);
+								welcome.setText("Hello "
+										+ user.getName() + "!");
+							}
+						}
+					}).executeAsync();
 				}
 			}
 		});
